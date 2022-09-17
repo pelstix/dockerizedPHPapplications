@@ -1,6 +1,7 @@
 version: "3.2"
 services:
   php:
+    image: no1pelz/bastion_php:latest    
     build: 
       context: './php/'
       args:
@@ -10,7 +11,11 @@ services:
     volumes:
       - ${PROJECT_ROOT}/:/var/www/html/
     container_name: php
+    deploy:
+      mode: replicated
+      replicas: 3
   apache:
+    image: no1pelz/bastion_webapp_v2:latest      
     build:
       context: './apache/'
       args:
@@ -26,6 +31,9 @@ services:
     volumes:
       - ${PROJECT_ROOT}/:/var/www/html/
     container_name: apache
+    deploy:
+      mode: replicated
+      replicas: 3
   mysql:
     image: mysql:${MYSQL_VERSION:-latest}
     restart: always
@@ -41,6 +49,9 @@ services:
       MYSQL_USER: "${DB_USERNAME}"
       MYSQL_PASSWORD: "${DB_PASSWORD}"
     container_name: mysql
+    deploy:
+      mode: replicated
+      replicas: 3
 networks:
   frontend:
   backend:
